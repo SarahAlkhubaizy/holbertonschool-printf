@@ -39,3 +39,49 @@ int handle_string(va_list args)
 	}
 	return (count);
 }
+#include "main.h"
+
+/**
+ * handle_int - prints an integer using recursion
+ * @n: integer to be printed
+ *
+ * Return: the total number of characters printed
+ */
+
+#include "main.h"
+
+/**
+ * handle_int - prints an integer using recursion
+ * @n: integer to be printed
+ *
+ * Return: the total number of characters printed
+ */
+
+int handle_int(int n)
+{
+	int count = 0;
+	unsigned int num;
+
+	/* 1. Handle negative numbers */
+	if (n < 0)
+	{
+		count += _putchar('-');
+		num = -n;
+	}
+	else
+	{
+		num = n;
+	}
+
+	/* 2. Recursion to print digits in the correct order */
+	if (num / 10)
+	{
+		/* We cast to handle the next recursive call correctly */
+		count += handle_int_helper(num / 10);
+	}
+
+	/* 3. Print the last digit by converting it to ASCII */
+	count += _putchar((num % 10) + '0');
+
+	return (count);
+}
