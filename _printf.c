@@ -16,7 +16,7 @@ int check_specifier(char format, va_list args)
 	else if (format == 's')
 		count = handle_string(args);
 	else if (format == 'd' || format == 'i')
-		count = handle_int(va_arg(args, int));
+		count = handle_int(args);
 	else if (format == '%')
 	{
 		write(1, "%", 1);
