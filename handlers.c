@@ -1,12 +1,6 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-/**
- * handle_char - prints a character from va_list
- * @args: argument list
- *
- * Return: number of characters printed (always 1)
- */
 int handle_char(va_list args)
 {
 	char c;
@@ -16,13 +10,6 @@ int handle_char(va_list args)
 	return (1);
 }
 
-
-/**
- * handle_string - prints a string from va_list
- * @args: argument list
- *
- * Return: number of characters printed
- */
 int handle_string(va_list args)
 {
 	char *s;
@@ -39,49 +26,45 @@ int handle_string(va_list args)
 	}
 	return (count);
 }
-#include "main.h"
 
-/**
- * handle_int - prints an integer using recursion
- * @n: integer to be printed
- *
- * Return: the total number of characters printed
- */
-
-#include "main.h"
-
-/**
- * handle_int - prints an integer using recursion
- * @n: integer to be printed
- *
- * Return: the total number of characters printed
- */
-
-int handle_int(int n)
+int handle_int(va_list args)
 {
+	int n;
 	int count = 0;
-	unsigned int num;
+	int divisor;
+	int temp;
+	char digit;
 
-	/* 1. Handle negative numbers */
+	n = va_arg(args, int);
+
 	if (n < 0)
 	{
-		count += _putchar('-');
-		num = -n;
-	}
-	else
-	{
-		num = n;
-	}
-
-	/* 2. Recursion to print digits in the correct order */
-	if (num / 10)
-	{
-		/* We cast to handle the next recursive call correctly */
-		count += handle_int_helper(num / 10);
+		write(1, "-", 1);
+		count++;
+		if (n == -2147483648)
+		{
+			write(1, "2147483648", 10);
+			return (count + 10);
+		}
+		n = -n;
 	}
 
-	/* 3. Print the last digit by converting it to ASCII */
-	count += _putchar((num % 10) + '0');
+	divisor = 1;
+	temp = n;
+	while (temp >= 10)
+	{
+		divisor *= 10;
+		temp /= 10;
+	}
+
+	while (divisor >= 1)
+	{
+		digit = '0' + (n / divisor);
+		write(1, &digit, 1);
+		count++;
+		n %= divisor;
+		divisor /= 10;
+	}
 
 	return (count);
 }
