@@ -1,6 +1,35 @@
-#include <unistd.h>
-#include <stdarg.h>
 #include "main.h"
+
+/**
+ * check_specifier - Checks and handles the specifier after %
+ * @format: The specifier character
+ * @args: The list of arguments
+ *
+ * Return: Number of characters printed
+ */
+int check_specifier(char format, va_list args)
+{
+	int count = 0;
+
+	if (format == 'c')
+		count = handle_char(args);
+	else if (format == 's')
+		count = handle_string(args);
+	else if (format == 'd' || format == 'i')
+		count = handle_int(va_arg(args, int));
+	else if (format == '%')
+	{
+		write(1, "%", 1);
+		count = 1;
+	}
+	else
+	{
+		write(1, "%", 1);
+		write(1, &format, 1);
+		count = 2;
+	}
+	return (count);
+}
 
 /**
  * _printf - produces output according to a format
@@ -11,15 +40,13 @@
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int i = 0;
-	int count = 0;
+	int i = 0, count = 0, res = 0;
 
-	if (!format)
+	if (!format || (format[0] == '%' && !format[1]))
 		return (-1);
 
 	va_start(args, format);
-
-	while (format[i])
+	while (format && format[i])
 	{
 		if (format[i] != '%')
 		{
@@ -34,25 +61,13 @@ int _printf(const char *format, ...)
 				va_end(args);
 				return (-1);
 			}
-			if (format[i] == 'c')
-				count += handle_char(args);
-			else if (format[i] == 's')
-				count += handle_string(args);
-			else if (format[i] == '%')
-			{
-				write(1, "%", 1);
-				count++;
-			}
-			else
-			{
-				write(1, "%", 1);
-				write(1, &format[i], 1);
-				count += 2;
-			}
+			res = check_specifier(format[i], args);
+			if (res == -1)
+				return (-1);
+			count += res;
 		}
 		i++;
 	}
-
 	va_end(args);
 	return (count);
 }
