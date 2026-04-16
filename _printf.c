@@ -22,6 +22,14 @@ int check_specifier(char c, va_list args)
 		count = handle_int(args);
 	else if (c == 'b')
                 count = handle_binary(args);
+	else if (c == 'u')
+                count = handle_unsigned(args);
+        else if (c == 'o')
+                count = handle_octal(args);
+        else if (c == 'x')
+                count = handle_hex(args, 0);
+        else if (c == 'X')
+                count = handle_hex(args, 1);
 	else if (c == '%')
 	{
 		write(1, "%", 1);

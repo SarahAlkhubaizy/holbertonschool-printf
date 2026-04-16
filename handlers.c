@@ -107,3 +107,123 @@ int handle_binary(va_list args)
 	}
 	return (count);
 }
+
+/**
+ * handle_unsigned - prints unsigned integer
+ * @args: argument list
+ *
+ * Return: number of characters printed
+ */
+int handle_unsigned(va_list args)
+{
+	unsigned int n;
+	unsigned int divisor;
+	unsigned int temp;
+	int count;
+	char digit;
+
+	count = 0;
+	n = va_arg(args, unsigned int);
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return (1);
+	}
+	divisor = 1;
+	temp = n;
+	while (temp >= 10)
+	{
+		divisor *= 10;
+		temp /= 10;
+	}
+	while (divisor >= 1)
+	{
+		digit = '0' + (n / divisor);
+		write(1, &digit, 1);
+		count++;
+		n %= divisor;
+		divisor /= 10;
+	}
+	return (count);
+}
+
+/**
+ * handle_octal - prints unsigned integer in octal
+ * @args: argument list
+ *
+ * Return: number of characters printed
+ */
+int handle_octal(va_list args)
+{
+	unsigned int n;
+	unsigned int divisor;
+	unsigned int temp;
+	int count;
+	char digit;
+
+	count = 0;
+	n = va_arg(args, unsigned int);
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return (1);
+	}
+	divisor = 1;
+	temp = n;
+	while (temp >= 8)
+	{
+		divisor *= 8;
+		temp /= 8;
+	}
+	while (divisor >= 1)
+	{
+		digit = '0' + (n / divisor);
+		write(1, &digit, 1);
+		count++;
+		n %= divisor;
+		divisor /= 8;
+	}
+	return (count);
+}
+
+/**
+ * handle_hex - prints unsigned integer in hexadecimal
+ * @args: argument list
+ * @uppercase: 1 for uppercase, 0 for lowercase
+ *
+ * Return: number of characters printed
+ */
+int handle_hex(va_list args, int uppercase)
+{
+	unsigned int n;
+	unsigned int divisor;
+	unsigned int temp;
+	int count;
+	char digit;
+	char *hex;
+
+	count = 0;
+	hex = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+	n = va_arg(args, unsigned int);
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return (1);
+	}
+	divisor = 1;
+	temp = n;
+	while (temp >= 16)
+	{
+		divisor *= 16;
+		temp /= 16;
+	}
+	while (divisor >= 1)
+	{
+		digit = hex[n / divisor];
+		write(1, &digit, 1);
+		count++;
+		n %= divisor;
+		divisor /= 16;
+	}
+	return (count);
+}
