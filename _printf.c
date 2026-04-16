@@ -20,6 +20,8 @@ int check_specifier(char c, va_list args)
 		count = handle_string(args);
 	else if (c == 'd' || c == 'i')
 		count = handle_int(args);
+	else if (c == 'b')
+                count = handle_binary(args);
 	else if (c == '%')
 	{
 		write(1, "%", 1);

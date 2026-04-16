@@ -68,3 +68,42 @@ int handle_int(va_list args)
 
 	return (count);
 }
+
+/**
+ * handle_binary - prints unsigned int in binary
+ * @args: argument list
+ *
+ * Return: number of characters printed
+ */
+int handle_binary(va_list args)
+{
+	unsigned int n;
+	unsigned int divisor;
+	unsigned int temp;
+	int count;
+	char digit;
+
+	count = 0;
+	n = va_arg(args, unsigned int);
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return (1);
+	}
+	divisor = 1;
+	temp = n;
+	while (temp >= 2)
+	{
+		divisor *= 2;
+		temp /= 2;
+	}
+	while (divisor >= 1)
+	{
+		digit = '0' + (n / divisor);
+		write(1, &digit, 1);
+		count++;
+		n %= divisor;
+		divisor /= 2;
+	}
+	return (count);
+}
