@@ -29,14 +29,14 @@ int check_specifier(char c, va_list args, char *buffer, int *index)
 		count = handle_hex(args, 0, buffer, index);
 	else if (c == 'X')
 		count = handle_hex(args, 1, buffer, index);
+	else if (c == 'S')
+		count = handle_S(args, buffer, index);
 	else if (c == '%')
 		count = write_to_buffer('%', buffer, index);
 	else
 	{
-		/* If specifier is unknown, print the '%' and the character */
-		write_to_buffer('%', buffer, index);
-		write_to_buffer(c, buffer, index);
-		count = 2;
+		count += write_to_buffer('%', buffer, index);
+		count += write_to_buffer(c, buffer, index);
 	}
 	return (count);
 }
@@ -61,24 +61,21 @@ int _printf(const char *format, ...)
 	{
 		if (format[i] != '%')
 		{
-			/* Add normal characters to buffer */
 			count += write_to_buffer(format[i], buffer, &buf_idx);
 		}
 		else
 		{
-			i++; /* Move to the character after '%' */
+			i++;
 			if (!format[i])
 			{
 				va_end(args);
 				return (-1);
 			}
-			/* Pass everything to the specifier checker */
 			count += check_specifier(format[i], args, buffer, &buf_idx);
 		}
 		i++;
 	}
 
-	/* IMPORTANT: Print any remaining characters in the buffer before exiting */
 	if (buf_idx > 0)
 		write(1, buffer, buf_idx);
 

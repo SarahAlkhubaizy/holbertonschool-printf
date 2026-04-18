@@ -15,5 +15,5 @@ int handle_binary(va_list args, char *buffer, int *index);
 int handle_unsigned(va_list args, char *buffer, int *index);
 int handle_octal(va_list args, char *buffer, int *index);
 int handle_hex(va_list args, int uppercase, char *buffer, int *index);
-
+int handle_S(va_list args, char *buffer, int *index);
 #endif

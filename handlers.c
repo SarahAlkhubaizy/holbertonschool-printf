@@ -2,6 +2,10 @@
 
 /**
  * handle_char - handles character printing
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed (1)
  */
 int handle_char(va_list args, char *buffer, int *index)
 {
@@ -12,6 +16,10 @@ int handle_char(va_list args, char *buffer, int *index)
 
 /**
  * handle_string - handles string printing
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_string(va_list args, char *buffer, int *index)
 {
@@ -30,7 +38,47 @@ int handle_string(va_list args, char *buffer, int *index)
 }
 
 /**
+ * handle_S - prints string with hex for non-printable characters
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: total number of characters printed
+ */
+int handle_S(va_list args, char *buffer, int *index)
+{
+	char *s = va_arg(args, char *);
+	int count = 0, i = 0;
+	char *hex = "0123456789ABCDEF";
+
+	if (!s)
+		s = "(null)";
+
+	for (i = 0; s[i]; i++)
+	{
+		/* Check if character is printable */
+		if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
+		{
+			count += write_to_buffer('\\', buffer, index);
+			count += write_to_buffer('x', buffer, index);
+			/* First hex digit */
+			count += write_to_buffer(hex[(unsigned char)s[i] / 16], buffer, index);
+			/* Second hex digit */
+			count += write_to_buffer(hex[(unsigned char)s[i] % 16], buffer, index);
+		}
+		else
+		{
+			count += write_to_buffer(s[i], buffer, index);
+		}
+	}
+	return (count);
+}
+
+/**
  * handle_int - handles integer printing
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_int(va_list args, char *buffer, int *index)
 {
@@ -60,6 +108,10 @@ int handle_int(va_list args, char *buffer, int *index)
 
 /**
  * handle_binary - prints unsigned int in binary
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_binary(va_list args, char *buffer, int *index)
 {
@@ -84,6 +136,10 @@ int handle_binary(va_list args, char *buffer, int *index)
 
 /**
  * handle_unsigned - prints unsigned integer
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_unsigned(va_list args, char *buffer, int *index)
 {
@@ -108,6 +164,10 @@ int handle_unsigned(va_list args, char *buffer, int *index)
 
 /**
  * handle_octal - prints unsigned integer in octal
+ * @args: argument list
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_octal(va_list args, char *buffer, int *index)
 {
@@ -132,6 +192,11 @@ int handle_octal(va_list args, char *buffer, int *index)
 
 /**
  * handle_hex - prints unsigned integer in hexadecimal
+ * @args: argument list
+ * @uppercase: 1 for upper, 0 for lower
+ * @buffer: local buffer
+ * @index: current position in buffer
+ * Return: number of characters printed
  */
 int handle_hex(va_list args, int uppercase, char *buffer, int *index)
 {
