@@ -52,34 +52,34 @@ int check_specifier(char c, va_list args)
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int i;
-	int count;
+    va_list args;
+    char buffer[BUF_SIZE];
+    int i = 0, count = 0, buf_idx = 0;
 
-	i = 0;
-	count = 0;
-	if (!format)
-		return (-1);
-	va_start(args, format);
-	while (format[i])
-	{
-		if (format[i] != '%')
-		{
-			write(1, &format[i], 1);
-			count++;
-		}
-		else
-		{
-			i++;
-			if (!format[i])
-			{
-				va_end(args);
-				return (-1);
-			}
-			count += check_specifier(format[i], args);
-		}
-		i++;
-	}
-	va_end(args);
-	return (count);
+    if (!format) return (-1);
+    va_start(args, format);
+
+    while (format && format[i])
+    {
+        if (format[i] != '%')
+        {
+            count += write_to_buffer(format[i], buffer, &buf_idx);
+        }
+        else
+        {
+            i++;
+            if (!format[i])
+            {
+                va_end(args);
+                return (-1);
+            }
+	    
+	    count += handle_specifier(format[i], args, buffer, &buf_idx);
+        }
+        i++;
+    }
+
+    write(1, buffer, buf_idx);
+    va_end(args);
+    return (count);
 }
